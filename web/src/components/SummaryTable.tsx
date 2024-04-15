@@ -1,20 +1,20 @@
 import dayjs from "dayjs"
 import { useEffect, useState } from "react"
 import { api } from "../lib/axios"
-import { generateDatesFromYearBeginning } from "../utils/generate-dates-from-year-beginning"
+import { generateDatesFromMonthBeginning } from "../utils/generate-dates-from-month-beginning"
 import { TargetDay } from "./TargetDay"
 
 const weekDays = [
-  'D',
-  'S',
-  'T',
-  'Q',
-  'Q',
-  'S',
-  'S',
+  'Seg',
+  'Ter',
+  'Qua',
+  'Qui',
+  'Sex',
+  'Sáb',
+  'Dom',
 ];
 
-const summaryDates = generateDatesFromYearBeginning()
+const summaryDates = generateDatesFromMonthBeginning()
 
 const minimumSummaryDatesSize = 18 * 7 // 18 weeks
 const amountOfDaysToFill = minimumSummaryDatesSize - summaryDates.length
@@ -39,12 +39,12 @@ export function SummaryTable() {
 
   return (
     <div className="w-full flex ">
-      <div className="grid grid-rows-7 grid-flow-row gap-3">
+      <div className="text-left grid grid-rows-7 grid-flow-row gap-5 mr-2">
         {weekDays.map((weekDays, i) => {
           return (
             <div 
             key={`${weekDays}-${i}`} 
-            className="text-zinc-400 text-xl h-10 w-10 font-bold flex items-center justify-center"
+            className="text-zinc-400 text-xl h-10 w-10 font-bold flex items-left justify-start"
             >
               {weekDays}
             </div>
