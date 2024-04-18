@@ -11,10 +11,20 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+model User {
+  id       String   @id @default(uuid())
+  username String   @unique
+  password String
+
+  targets  Target[]
+}
+
 model Target {
   id         String   @id @default(uuid())
   title      String
   created_at DateTime
+  user_id    String
+  user User @relation(fields: [user_id], references: [id])
 
   dayTargets DayTarget[]
   weekDays  TargetWeekDays[]

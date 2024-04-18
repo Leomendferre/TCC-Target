@@ -158,19 +158,19 @@ export async function appRoutes(app: FastifyInstance) {
     try {
       await prisma.dayTarget.deleteMany({
         where: {
-          target_id: id, // O ID do Target que deseja excluir
+          target_id: id,
         },
       });
 
       await prisma.targetWeekDays.deleteMany({
         where: {
-          target_id: id, // O ID do Target que deseja excluir
+          target_id: id,
         },
       });
 
       await prisma.target.delete({
         where: {
-          id, // O ID do Target que deseja excluir
+          id,
         },
       });
   
