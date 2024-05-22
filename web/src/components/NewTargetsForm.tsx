@@ -21,7 +21,9 @@ export function NewTargetsForm() {
     event.preventDefault()
     
     if (!title || weekDays.length === 0) {
-      return
+      return(
+        alert('Digite o nome do seu Target, e selecione um dia da semana!')
+      )
     }
 
     await api.post('targets', {

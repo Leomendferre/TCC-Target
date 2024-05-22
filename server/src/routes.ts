@@ -1,9 +1,90 @@
+import { FastifyInstance, FastifyReply, FastifyRequest } from 'fastify'
+import { hash, compare } from 'bcrypt';
+import { sign, verify } from 'jsonwebtoken';
 import dayjs from 'dayjs'
-import { FastifyInstance } from 'fastify'
 import { z } from 'zod'
-import { prisma } from "./lib/prisma"
+import { prisma } from './lib/prisma'
 
 export async function appRoutes(app: FastifyInstance) {
+  
+  app.post('/register', async (request, reply) => {
+    const createUser = z.object({
+      username: z.string(),
+       password: z.string()  
+   })
+    const { username, password } = createUser.parse(request.body)
+
+    const hashedPassword = await hash(password, 10);
+
+    const user = await prisma.user.create({
+      data: {
+        username,
+        password: hashedPassword,
+      },
+    });
+  
+    reply.send(user);
+  });
+
+  app.post('/login', async (request, reply) => {
+    const createUser = z.object({
+      username: z.string(),
+       password: z.string()  
+   })
+    const { username, password } = createUser.parse(request.body)
+  
+    const user = await prisma.user.findUnique({
+      where: {
+        username,
+      },
+    });
+  
+    if (!user) {
+      reply.status(401).send('Usuário não encontrado');
+      return;
+    }
+  
+    const passwordMatch = await compare(password, user.password);
+  
+    if (!passwordMatch) {
+      reply.status(401).send('Senha incorreta');
+      return;
+    }
+  
+    const token = sign({ userId: user.id }, 'secreto', { expiresIn: '1h' });
+  
+    reply.send({ token });
+  });
+
+  function verifyToken (request: FastifyRequest, reply: FastifyReply, done: (err?: Error) => void) {
+    const token = request.headers['authorization']?.replace('Bearer ', '');
+  
+    if (!token) {
+      reply.status(401).send('Token não fornecido');
+      return;
+    }
+  
+    try {
+      const decoded = verify(token, 'secreto');
+      request.user = decoded;
+      done();
+    } catch (err) {
+      reply.status(401).send('Token inválido');
+    }
+  }
+  
+  app.get('/targets', { preHandler: verifyToken }, async (request) => {
+    const userId = request.user.userId;
+  
+    const targets = await prisma.target.findMany({
+      where: {
+        user_id: userId,
+      },
+    });
+  
+    return targets;
+  });
+
   app.post('/targets', async (request) => {
     const createTargetBody = z.object({
       title: z.string(),
