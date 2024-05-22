@@ -1,6 +1,6 @@
 import { FastifyInstance, FastifyReply, FastifyRequest } from 'fastify'
-import { hash, compare } from 'bcrypt';
-import { sign, verify } from 'jsonwebtoken';
+import { hash, compare } from 'bcrypt'
+import { sign, verify } from 'jsonwebtoken'
 import dayjs from 'dayjs'
 import { z } from 'zod'
 import { prisma } from './lib/prisma'
