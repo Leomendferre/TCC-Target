@@ -42,7 +42,7 @@ export async function appRoutes(app: FastifyInstance) {
     }
   });
 
-  app.post('/targets', async (request) => {
+  app.post('/user/:id/targets', async (request) => {
     const createTargetBody = z.object({
       title: z.string(),
       weekDays: z.array(
@@ -50,14 +50,18 @@ export async function appRoutes(app: FastifyInstance) {
       ),
     })
 
+    const targetUser = z.object({
+      id: z.string().uuid(),
+    })
+
     const { title, weekDays } = createTargetBody.parse(request.body)
+    const { id } = targetUser.parse(request.params)
 
     const today = dayjs().startOf('day').toDate()
 
     await prisma.target.create({
       data: {
-        user: {
-        },
+        user_id: id,
         title,
         created_at: today,
         weekDays: {
@@ -162,27 +166,34 @@ export async function appRoutes(app: FastifyInstance) {
 
   })
  
-  app.get('/summary', async () => {
+  app.get('/user/:id/summary', async (request) => {
+    const targetUser = z.object({
+      id: z.string().uuid(),
+    })
+
+    const { id } = targetUser.parse(request.params)
     const summary = await prisma.$queryRaw`
       SELECT 
         D.id, 
         D.date,
         (
           SELECT 
-            cast(count(*) as float)
+            CAST(COUNT(*) AS FLOAT)
           FROM day_targets DH
+          JOIN targets T ON DH.target_id = T.id
           WHERE DH.day_id = D.id
-        ) as completed,
+            AND T.user_id = ${id}
+        ) AS completed,
         (
           SELECT
-             cast(count(*) as float)
-           FROM target_week_days HWD
-           JOIN targets H
-            ON H.id = HWD.target_id
-           WHERE
-            HWD.week_day = cast(strftime('%w', D.date/1000.0, 'unixepoch')as int)
+            CAST(COUNT(*) AS FLOAT)
+          FROM target_week_days HWD
+          JOIN targets H ON H.id = HWD.target_id
+          WHERE
+            HWD.week_day = CAST(STRFTIME('%w', D.date / 1000.0, 'unixepoch') AS INT)
             AND H.created_at <= D.date
-        ) as amount
+            AND H.user_id = ${id}
+        ) AS amount
       FROM days D
     `
     
