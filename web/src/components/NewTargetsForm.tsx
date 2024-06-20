@@ -16,6 +16,7 @@ const availableWeekDays = [
 export function NewTargetsForm() {
   const [title, setTitle] = useState('')
   const [weekDays, setWeekDays] = useState<number[]>([])
+  const userId = localStorage.getItem('userId');
 
   async function createNewTarget(event: FormEvent) {
     event.preventDefault()
@@ -26,7 +27,9 @@ export function NewTargetsForm() {
       )
     }
 
-    await api.post('targets', {
+    console.log('User ID:', userId);
+
+    await api.post(`/user/${userId}/targets`, {
       title,
       weekDays,
     })

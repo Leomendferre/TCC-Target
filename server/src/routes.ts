@@ -40,6 +40,8 @@ export async function appRoutes(app: FastifyInstance) {
       reply.status(401).send('Usuário não encontrado');
       return;
     }
+
+    reply.send({ id: user.id, username: user.username });
   });
 
   app.post('/user/:id/targets', async (request) => {

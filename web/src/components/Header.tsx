@@ -9,6 +9,7 @@ export function Header() {
   const navigate = useNavigate();
 
   const handleLogout = () => {
+    localStorage.removeItem('userId');
     navigate('/');
   };
 
