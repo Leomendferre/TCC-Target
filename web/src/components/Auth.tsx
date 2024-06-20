@@ -26,7 +26,7 @@ const Auth: React.FC = () => {
 
   return (
     <div className="w-screen h-screen flex justify-center items-center bg-black">
-      <div className="w-full max-w-md p-8 space-y-6 bg-gray-800 text-white shadow-md rounded-lg">
+      <div className="w-full max-w-md p-8 space-y-6 text-white shadow-md rounded-lg">
         <div className="flex justify-around">
           <button
             onClick={() => setIsLogin(true)}
@@ -42,23 +42,22 @@ const Auth: React.FC = () => {
           </button>
         </div>
         <form onSubmit={handleAuth} className="space-y-4">
-          <h2 className="text-2xl font-bold text-center">{isLogin ? 'Login' : 'Criar conta'}</h2>
           <div>
-            <label className="block text-gray-300">Username:</label>
+            <label className="block text-gray-300">Nome do usuário</label>
             <input
               type="text"
               value={username}
               onChange={(e) => setUsername(e.target.value)}
-              className="w-full px-3 py-2 bg-gray-700 border border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring focus:ring-blue-300"
+              className="w-full px-3 py-2 bg-gray-700 border border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring focus:ring-blue-500"
             />
           </div>
           <div>
-            <label className="block text-gray-300">Password:</label>
+            <label className="block text-gray-300">Senha</label>
             <input
               type="password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
-              className="w-full px-3 py-2 bg-gray-700 border border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring focus:ring-blue-300"
+              className="w-full px-3 py-2 bg-gray-700 border border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring focus:ring-blue-500"
             />
           </div>
           <button
