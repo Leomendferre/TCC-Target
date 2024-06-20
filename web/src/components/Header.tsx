@@ -9,7 +9,6 @@ export function Header() {
   const navigate = useNavigate();
 
   const handleLogout = () => {
-    // Aqui você pode adicionar qualquer lógica de logout, como limpar o token de autenticação
     navigate('/');
   };
 
