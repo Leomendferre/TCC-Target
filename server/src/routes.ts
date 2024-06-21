@@ -79,10 +79,11 @@ export async function appRoutes(app: FastifyInstance) {
 
   app.get('/day', async (request) => {
     const getDayParams = z.object({
-      date: z.coerce.date()
+      date: z.coerce.date(),
+      user_id: z.string().uuid()
     })
 
-    const { date } = getDayParams.parse(request.query)
+    const { date, user_id } = getDayParams.parse(request.query)
 
     const parsedDate = dayjs(date).startOf('day')
     const weekDay = parsedDate.get('day')
@@ -96,7 +97,8 @@ export async function appRoutes(app: FastifyInstance) {
           some: {
             week_day: weekDay,
           }
-        }
+        },
+        user_id: user_id
       },
     })
 
@@ -174,6 +176,7 @@ export async function appRoutes(app: FastifyInstance) {
     })
 
     const { id } = targetUser.parse(request.params)
+
     const summary = await prisma.$queryRaw`
       SELECT 
         D.id, 

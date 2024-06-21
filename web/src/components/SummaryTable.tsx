@@ -30,12 +30,24 @@ export function SummaryTable() {
 
   const [summary, setSummary] = useState<Summary>([])
 
-
   useEffect(() => {
-    api.get('summary').then(response => {
-      setSummary(response.data)
-    })
-  }, [])
+    const userId = localStorage.getItem('userId');
+
+    console.log(userId);
+    
+
+    if (!userId) {
+      alert('Usuário não autenticado');
+      return;
+    }
+
+    api.get(`/user/${userId}/summary`).then(response => {
+      setSummary(response.data);
+    }).catch(error => {
+      alert('Erro ao carregar o resumo');
+      console.error(error);
+    });
+  }, []);
 
   return (
     <div className="w-full flex ">

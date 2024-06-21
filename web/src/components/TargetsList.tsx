@@ -22,9 +22,12 @@ export function TargetsList({ date, onCompletedChanged }: TargetLisProps) {
   const [targetsInfo, setTargetsInfo] = useState<TargetsInfo>()
 
   useEffect(() => {
+    const userId = localStorage.getItem('userId');
+  
     api.get('day', {
       params: {
         date: date.toISOString(),
+        user_id: userId
       }
     }).then(response => {
       setTargetsInfo(response.data)
