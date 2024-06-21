@@ -205,7 +205,7 @@ export async function appRoutes(app: FastifyInstance) {
     return summary
   })
 
-  app.delete('/targets/:id', async (request) => {
+  app.delete('/targets/:id/delete', async (request) => {
     const deleteTargetParams = z.object({
       id: z.string().uuid(),
     });
