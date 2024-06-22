@@ -1,22 +1,14 @@
 import dayjs from "dayjs"
 import { useEffect, useState } from "react"
 import { api } from "../lib/axios"
-import { generateDatesFromMonthBeginning } from "../utils/generate-dates-from-month-beginning"
+import { generateDatesFromMonthBeginning, getReorderedWeekDays } from "../utils/generate-dates-from-month-beginning"
 import { TargetDay } from "./TargetDay"
 
-const weekDays = [
-  'Seg',
-  'Ter',
-  'Qua',
-  'Qui',
-  'Sex',
-  'Sáb',
-  'Dom',
-];
 
 const summaryDates = generateDatesFromMonthBeginning()
+const weekDays = getReorderedWeekDays();
 
-const minimumSummaryDatesSize = 18 * 7 // 18 weeks
+const minimumSummaryDatesSize = 18 * 7 // 4 weeks
 const amountOfDaysToFill = minimumSummaryDatesSize - summaryDates.length
 
 type Summary = {
@@ -32,8 +24,6 @@ export function SummaryTable() {
 
   useEffect(() => {
     const userId = localStorage.getItem('userId');
-
-    console.log(userId);
     
 
     if (!userId) {
@@ -45,7 +35,6 @@ export function SummaryTable() {
       setSummary(response.data);
     }).catch(error => {
       alert('Erro ao carregar o resumo');
-      console.error(error);
     });
   }, []);
 
